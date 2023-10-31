@@ -5,7 +5,7 @@ import websockets
 import asyncio
 from threading import Event
 
-model = Model(r"E:\Hands-on\Models\Pre-Trained\Speech_to_Text\vosk-model-en-us-0.22-lgraph")
+model = Model(r"vosk-model-en-us-0.22-lgraph")
 mic = None
 stream = None
 is_recording = False
