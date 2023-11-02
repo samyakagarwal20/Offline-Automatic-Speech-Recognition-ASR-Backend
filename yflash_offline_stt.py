@@ -5,7 +5,7 @@ import websockets
 import asyncio
 from threading import Event
 
-model = Model(r"vosk-model-en-us-0.22-lgraph")
+model = Model(r"E:\Hands-on\Models\Pre-Trained\Speech_to_Text\vosk-model-en-us-0.22-lgraph")
 mic = None
 stream = None
 is_recording = False
@@ -17,7 +17,7 @@ print('Recognition Module Initialized')
 
 async def start_audio_capture():
     global is_recording, mic, stream, stop_event, queue
-    
+
     print('Capturing audio...')
     stream.start_stream()
     while not stop_event.is_set():
@@ -39,10 +39,10 @@ def stop_audio_capture():
         if stream is not None:
             stream.stop_stream()
             stream.close()
-    
+
         if mic is not None:
             mic.terminate()
-        
+
         print('Audio capturing stopped!')
 
     stream = None
@@ -75,8 +75,10 @@ async def websocket_server(websocket, uri):
                 transcription_task = asyncio.create_task(send_transcriptions(websocket))
             elif command == 'stop':
                 stop_event.set()
-                await audio_capture_task
-                await transcription_task
+                audio_capture_task.cancel()
+                transcription_task.cancel()
+                # await audio_capture_task
+                # await transcription_task
                 stop_audio_capture()
 
 start_server = websockets.serve(websocket_server, "localhost", 8765)
